@@ -35,5 +35,12 @@ const products = [
     "price": 1050,
     "inStock": true,
     "image": "images/star-wars-first-week-1977-showing-souven-1789870759885.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Through the looking Glass",
+    "price": 175,
+    "inStock": true,
+    "image": "images/through-the-looking-glass-1789884017304.jpg"
   }
 ];
