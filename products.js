@@ -28,5 +28,12 @@ const products = [
     "price": 75000,
     "inStock": true,
     "image": "images/air-jordans.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Star Wars first week 1977 showing souvenir",
+    "price": 1050,
+    "inStock": true,
+    "image": "images/star-wars-first-week-1977-showing-souven-1789870759885.jpg"
   }
 ];
