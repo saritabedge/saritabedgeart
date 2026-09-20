@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fast4ward</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="logo" href="#" aria-label="fast4ward home">
+      <img src="logo.png" alt="fast4ward">
+    </a>
+
+    <div class="header-icons">
+      <button id="adminBtn" class="admin-btn" aria-label="Manage items" title="Manage items">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button aria-label="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <div class="filters">
+        <div class="dropdown">
+          <button class="dd-btn">Availability <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dd-menu">
+            <label><input type="checkbox" data-filter="availability" value="in"> In stock</label>
+            <label><input type="checkbox" data-filter="availability" value="out"> Out of stock</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-controls">
+        <span class="count" id="count">4 items</span>
+        <div class="dropdown right">
+          <button class="dd-btn">Sort <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dd-menu">
+            <label><input type="radio" name="sort" value="featured" checked> Featured</label>
+            <label><input type="radio" name="sort" value="low"> Price: low to high</label>
+            <label><input type="radio" name="sort" value="high"> Price: high to low</label>
+            <label><input type="radio" name="sort" value="az"> Name: A–Z</label>
+          </div>
+        </div>
+        <div class="view-toggle">
+          <button class="active" data-cols="4" aria-label="Larger grid">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="grid cols-4" id="grid" aria-live="polite"></section>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <button class="m-close" aria-label="Close">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="adminModal" hidden>
+    <div class="modal-box admin-box" role="dialog" aria-modal="true">
+      <button class="a-close" aria-label="Close">&times;</button>
+      <div id="adminBody"></div>
+    </div>
+  </div>
+
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
