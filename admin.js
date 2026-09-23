@@ -115,6 +115,7 @@
       <div class="a-row" data-id="${p.id}">
         <img src="${esc(p.image)}" alt="" title="${(p.images || [p.image]).length} photo(s)">
         <input class="a-name" value="${esc(p.name)}" aria-label="Name">
+        <input class="a-loc" value="${esc(p.location || "")}" placeholder="Location" aria-label="Location">
         <input class="a-price" type="number" min="0" step="0.01" value="${p.price}" aria-label="Price">
         <label class="a-sold"><input type="checkbox" ${p.inStock ? "" : "checked"}> Sold</label>
         <label class="a-photos">+ Photos<input type="file" accept="image/*" multiple hidden></label>
@@ -130,6 +131,7 @@
         <label class="a-note">Photos (select several to let shoppers click through them; the first is the cover)
           <input type="file" id="aPhoto" accept="image/*" multiple required></label>
         <input type="text" id="aName" placeholder="Name" required>
+        <input type="text" id="aLoc" placeholder="Location (optional)">
         <input type="number" id="aPrice" placeholder="Price ($)" min="0" step="0.01" required>
         <button class="btn" type="submit">Add item</button>
       </form>
@@ -144,11 +146,12 @@
         const files = [...document.getElementById("aPhoto").files];
         const name = document.getElementById("aName").value.trim();
         const price = Number(document.getElementById("aPrice").value);
+        const location = document.getElementById("aLoc").value.trim();
         const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "item";
         const images = await uploadPhotos(files, slug, name);
         const fresh = await loadProducts();
         const id = fresh.list.reduce((m, p) => Math.max(m, p.id), 0) + 1;
-        await saveProducts(fresh, [...fresh.list, { id, name, price, inStock: true, image: images[0], images }], `Add ${name}`);
+        await saveProducts(fresh, [...fresh.list, { id, name, price, location, inStock: true, image: images[0], images }], `Add ${name}`);
         showPanel();
         setTimeout(() => setStatus("Added! It will be live for everyone in about a minute."), 300);
       } catch (err) { btn.disabled = false; setStatus(err.message, true); }
@@ -168,9 +171,10 @@
       row.querySelector(".a-save").addEventListener("click", () => {
         const name = row.querySelector(".a-name").value.trim();
         const price = Number(row.querySelector(".a-price").value);
+        const location = row.querySelector(".a-loc").value.trim();
         const sold = row.querySelector(".a-sold input").checked;
         if (!name || isNaN(price)) return setStatus("Enter a name and a price.", true);
-        update(list => list.map(p => p.id === id ? { ...p, name, price, inStock: !sold } : p), `Update ${name}`);
+        update(list => list.map(p => p.id === id ? { ...p, name, price, location, inStock: !sold } : p), `Update ${name}`);
       });
       row.querySelector(".a-photos input").addEventListener("change", async e => {
         const files = [...e.target.files];

@@ -118,11 +118,13 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round
 .card .info { padding: 28px 30px 30px; }
 .card .name { margin: 0; font-size: 17px; font-weight: 400; }
 .card .price { margin: 10px 0 0; font-size: 17px; }
+.card .location { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
 
 .card .price.sold { color: #3b47e0; }
 
 .grid.cols-6 .info { padding: 18px 16px 20px; }
 .grid.cols-6 .name, .grid.cols-6 .price { font-size: 14px; }
+.grid.cols-6 .location { font-size: 12px; }
 
 .empty { grid-column: 1 / -1; color: var(--muted); padding: 60px 0; text-align: center; }
 
@@ -138,6 +140,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round
 .m-info { padding: 40px 32px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .m-info h2 { margin: 0; font-size: 24px; font-weight: 400; }
 .m-price { margin: 0; font-size: 20px; }
+.m-location { margin: -6px 0 0; font-size: 15px; color: var(--muted); }
 .m-note { margin: 10px 0 0; color: var(--muted); font-size: 15px; }
 .m-sold { margin: 0; font-size: 20px; color: #3b47e0; }
 .btn { display: inline-block; background: var(--text); color: #fff; padding: 14px 28px; border-radius: 10px; font-size: 16px; }
@@ -205,7 +208,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round
 .a-status { min-height: 1.3em; margin: 0 0 8px; color: var(--muted); font-size: 14px; }
 .a-status.err { color: #c0392b; }
 .a-note { color: var(--muted); }
-.a-row { display: grid; grid-template-columns: 48px 1fr 100px auto auto auto auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0ece6; }
+.a-row { display: grid; grid-template-columns: 48px 1fr 1fr 100px auto auto auto auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0ece6; }
 .a-row img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; background: #000; }
 .a-sold { display: flex; gap: 6px; align-items: center; font-size: 14px; white-space: nowrap; }
 .a-photos { cursor: pointer; white-space: nowrap; }

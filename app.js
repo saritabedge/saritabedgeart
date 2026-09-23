@@ -59,6 +59,7 @@ function render() {
         <div class="photo carousel">${carouselHTML(p)}</div>
         <div class="info">
           <h3 class="name">${p.name}</h3>
+          ${p.location ? `<p class="location">${p.location}</p>` : ""}
           <p class="price${p.inStock ? "" : " sold"}">${p.inStock ? fmt(p.price) : "Sold"}</p>
         </div>
       </div>
@@ -106,6 +107,7 @@ function openModal(id) {
     <div class="m-photo carousel">${carouselHTML(p)}</div>
     <div class="m-info">
       <h2>${p.name}</h2>
+      ${p.location ? `<p class="m-location">${p.location}</p>` : ""}
       <p class="m-price">${p.inStock ? fmt(p.price) : ""}</p>
       ${actionHTML(p)}
     </div>`;
