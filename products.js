@@ -9,7 +9,9 @@ const products = [
     "image": "images/casino-chips.jpg",
     "images": [
       "images/casino-chips.jpg",
-      "images/casino-chips1.jpg"
+      "images/casino-chips1.jpg",
+      "images/las-vegas-casino-chips-1790188321097.jpg",
+      "images/las-vegas-casino-chips-1790188323269.jpg"
     ]
   },
   {
