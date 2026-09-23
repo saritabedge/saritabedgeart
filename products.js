@@ -6,7 +6,11 @@ const products = [
     "name": "Las Vegas Casino Chips",
     "price": 125,
     "inStock": true,
-    "image": "images/casino-chips.jpg"
+    "image": "images/casino-chips.jpg",
+    "images": [
+      "images/casino-chips.jpg",
+      "images/casino-chips1.jpg"
+    ]
   },
   {
     "id": 2,

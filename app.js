@@ -7,6 +7,37 @@ function checked(name) {
   return [...document.querySelectorAll(`input[data-filter="${name}"]:checked`)].map(i => i.value);
 }
 
+// All photos for a product (older entries only have a single "image")
+const photosOf = p => p.images && p.images.length ? p.images : [p.image];
+
+function carouselHTML(p) {
+  const photos = photosOf(p);
+  const imgs = photos.map((src, i) =>
+    `<img src="${src}" alt="${p.name}${photos.length > 1 ? ` (photo ${i + 1})` : ""}"${i ? ' loading="lazy"' : ""} class="${i ? "" : "active"}" onerror="this.classList.add('missing')">`).join("");
+  if (photos.length < 2) return imgs;
+  return imgs + `
+    <button class="c-nav c-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="c-nav c-next" aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="c-dots">${photos.map((_, i) => `<span class="${i ? "" : "active"}"></span>`).join("")}</div>`;
+}
+
+function step(carousel, dir) {
+  const imgs = [...carousel.querySelectorAll("img")];
+  const dots = [...carousel.querySelectorAll(".c-dots span")];
+  if (imgs.length < 2) return;
+  const cur = imgs.findIndex(img => img.classList.contains("active"));
+  const next = (cur + dir + imgs.length) % imgs.length;
+  imgs.forEach((img, i) => img.classList.toggle("active", i === next));
+  dots.forEach((d, i) => d.classList.toggle("active", i === next));
+}
+
+document.addEventListener("click", e => {
+  const nav = e.target.closest(".c-nav");
+  if (!nav) return;
+  e.preventDefault();
+  step(nav.parentElement, nav.classList.contains("c-prev") ? -1 : 1);
+});
+
 function render() {
   const avail = checked("availability");
   const sort = document.querySelector('input[name="sort"]:checked').value;
@@ -25,7 +56,7 @@ function render() {
   grid.innerHTML = list.length ? list.map(p => `
     <a class="card" href="#" data-id="${p.id}">
       <div class="media">
-        <div class="photo"><img src="${p.image}" alt="${p.name}" onerror="this.classList.add('missing')"></div>
+        <div class="photo carousel">${carouselHTML(p)}</div>
         <div class="info">
           <h3 class="name">${p.name}</h3>
           <p class="price${p.inStock ? "" : " sold"}">${p.inStock ? fmt(p.price) : "Sold"}</p>
@@ -72,7 +103,7 @@ function actionHTML(p) {
 function openModal(id) {
   const p = products.find(x => x.id === id);
   modalBody.innerHTML = `
-    <div class="m-photo"><img src="${p.image}" alt="${p.name}"></div>
+    <div class="m-photo carousel">${carouselHTML(p)}</div>
     <div class="m-info">
       <h2>${p.name}</h2>
       <p class="m-price">${p.inStock ? fmt(p.price) : ""}</p>
@@ -85,9 +116,13 @@ function closeModal() { modal.hidden = true; document.body.style.overflow = ""; 
 
 grid.addEventListener("click", e => {
   const card = e.target.closest(".card");
-  if (!card) return;
+  if (!card || e.target.closest(".c-nav")) return;
   e.preventDefault();
   openModal(Number(card.dataset.id));
 });
 modal.addEventListener("click", e => { if (e.target === modal || e.target.closest(".m-close")) closeModal(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+document.addEventListener("keydown", e => {
+  if (modal.hidden) return;
+  if (e.key === "Escape") closeModal();
+  if (e.key === "ArrowLeft" || e.key === "ArrowRight") step(modalBody.querySelector(".carousel"), e.key === "ArrowLeft" ? -1 : 1);
+});

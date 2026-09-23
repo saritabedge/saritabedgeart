@@ -64,6 +64,17 @@
     return new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(",")[1]); fr.readAsDataURL(blob); });
   }
 
+  async function uploadPhotos(files, slug, name) {
+    const paths = [];
+    for (const [i, file] of files.entries()) {
+      setStatus(`Uploading photo ${i + 1} of ${files.length}…`);
+      const path = `images/${slug}-${Date.now()}.jpg`;
+      await put(path, await resizeImage(file), `Add photo for ${name}`);
+      paths.push(path);
+    }
+    return paths;
+  }
+
   // ----- UI -----
   const open = () => { modal.hidden = false; document.body.style.overflow = "hidden"; };
   const close = () => { modal.hidden = true; document.body.style.overflow = ""; };
@@ -102,10 +113,11 @@
 
     const rows = base.list.map(p => `
       <div class="a-row" data-id="${p.id}">
-        <img src="${esc(p.image)}" alt="">
+        <img src="${esc(p.image)}" alt="" title="${(p.images || [p.image]).length} photo(s)">
         <input class="a-name" value="${esc(p.name)}" aria-label="Name">
         <input class="a-price" type="number" min="0" step="0.01" value="${p.price}" aria-label="Price">
         <label class="a-sold"><input type="checkbox" ${p.inStock ? "" : "checked"}> Sold</label>
+        <label class="a-photos">+ Photos<input type="file" accept="image/*" multiple hidden></label>
         <button class="a-save">Save</button>
         <button class="a-del" aria-label="Delete">Delete</button>
       </div>`).join("");
@@ -115,7 +127,8 @@
       <p id="aStatus" class="a-status"></p>
       <form id="aAdd" class="a-add">
         <h3>Add an item</h3>
-        <input type="file" id="aPhoto" accept="image/*" required>
+        <label class="a-note">Photos (select several to let shoppers click through them; the first is the cover)
+          <input type="file" id="aPhoto" accept="image/*" multiple required></label>
         <input type="text" id="aName" placeholder="Name" required>
         <input type="number" id="aPrice" placeholder="Price ($)" min="0" step="0.01" required>
         <button class="btn" type="submit">Add item</button>
@@ -128,15 +141,14 @@
       const btn = e.target.querySelector("button");
       btn.disabled = true; setStatus("Uploading…");
       try {
-        const file = document.getElementById("aPhoto").files[0];
+        const files = [...document.getElementById("aPhoto").files];
         const name = document.getElementById("aName").value.trim();
         const price = Number(document.getElementById("aPrice").value);
         const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "item";
-        const path = `images/${slug}-${Date.now()}.jpg`;
-        await put(path, await resizeImage(file), `Add photo for ${name}`);
+        const images = await uploadPhotos(files, slug, name);
         const fresh = await loadProducts();
         const id = fresh.list.reduce((m, p) => Math.max(m, p.id), 0) + 1;
-        await saveProducts(fresh, [...fresh.list, { id, name, price, inStock: true, image: path }], `Add ${name}`);
+        await saveProducts(fresh, [...fresh.list, { id, name, price, inStock: true, image: images[0], images }], `Add ${name}`);
         showPanel();
         setTimeout(() => setStatus("Added! It will be live for everyone in about a minute."), 300);
       } catch (err) { btn.disabled = false; setStatus(err.message, true); }
@@ -159,6 +171,17 @@
         const sold = row.querySelector(".a-sold input").checked;
         if (!name || isNaN(price)) return setStatus("Enter a name and a price.", true);
         update(list => list.map(p => p.id === id ? { ...p, name, price, inStock: !sold } : p), `Update ${name}`);
+      });
+      row.querySelector(".a-photos input").addEventListener("change", async e => {
+        const files = [...e.target.files];
+        if (!files.length) return;
+        const name = row.querySelector(".a-name").value.trim() || "item";
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "item";
+        try {
+          const added = await uploadPhotos(files, slug, name);
+          await update(list => list.map(p => p.id === id ? { ...p, images: [...(p.images || [p.image]), ...added] } : p),
+            `Add ${added.length} photo(s) to ${name}`);
+        } catch (err) { setStatus(err.message, true); }
       });
       row.querySelector(".a-del").addEventListener("click", async () => {
         if (!confirm("Delete this item from the site?")) return;
