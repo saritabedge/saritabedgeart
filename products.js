@@ -48,5 +48,18 @@ const products = [
     "price": 175,
     "inStock": true,
     "image": "images/through-the-looking-glass-1789884017304.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Oscilloscope",
+    "price": 250,
+    "location": "",
+    "inStock": true,
+    "image": "images/oscilloscope-1790216230507.jpg",
+    "images": [
+      "images/oscilloscope-1790216230507.jpg",
+      "images/oscilloscope-1790216232701.jpg",
+      "images/oscilloscope-1790216233815.jpg"
+    ]
   }
 ];
