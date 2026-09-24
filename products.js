@@ -61,5 +61,16 @@ const products = [
       "images/oscilloscope-1790216232701.jpg",
       "images/oscilloscope-1790216233815.jpg"
     ]
+  },
+  {
+    "id": 8,
+    "name": "Decorative Gold",
+    "price": 250,
+    "location": "",
+    "inStock": true,
+    "image": "images/decorative-gold-1790219198955.jpg",
+    "images": [
+      "images/decorative-gold-1790219198955.jpg"
+    ]
   }
 ];
