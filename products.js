@@ -11,5 +11,16 @@ const products = [
       "images/happy-diwali-card.jpg"
     ],
     "location": ""
+  },
+  {
+    "id": 2,
+    "name": "Christmas Card",
+    "price": 5,
+    "location": "",
+    "inStock": true,
+    "image": "images/christmas-card-1790360143639.jpg",
+    "images": [
+      "images/christmas-card-1790360143639.jpg"
+    ]
   }
 ];
