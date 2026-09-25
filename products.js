@@ -9,6 +9,7 @@ const products = [
     "image": "images/happy-diwali-card.jpg",
     "images": [
       "images/happy-diwali-card.jpg"
-    ]
+    ],
+    "location": ""
   }
 ];
