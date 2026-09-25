@@ -3,5 +3,5 @@ const ADMIN_CONFIG = {
   owner: "saritabedge",
   repo: "saritabedgeart",
   branch: "main",
-  lockedToken: {"salt":"XFKEE6vrQqa6i8/3rsZL4Q==","iv":"3eubzh7ALJUkWHtv","data":"Os3uFsITeNGmdau9jwaAd0g2Vvu4ZvvRgC1/5aJ8gpt+Z7HXfISvvkorUZo8fiK2InEiS44fX+/jQyS1SKkhYMg17w7kUj1S7nIBZbPTuzHmVDJpVSpm8NAIJMdQIVkxU74pg+Vmvq6BJS8ALQ=="},
+  lockedToken: {"salt":"9Uq7qPhFaeVJBxOyefyI5A==","iv":"Aw5sPxWHcgJNQ76G","data":"8eyX5KOyGVYRqewKwaCBQAwolBCOUvc7FSkbWg5YiPoEnDGnctlv7ojezBYyXK0ieHXJOchEsMt3ZdriZoCZVKPuLiPZ6CWOdhbzIeeN6QNrFWqL5gEWuC6eFcFW2dKs7uyYt+o2yw9A+s1H0g=="},
 };
