@@ -3,4 +3,5 @@ const ADMIN_CONFIG = {
   owner: "saritabedge",
   repo: "saritabedgeart",
   branch: "main",
+  lockedToken: null,
 };

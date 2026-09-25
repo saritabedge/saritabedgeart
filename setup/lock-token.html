@@ -3,22 +3,19 @@
 <title>Lock GitHub token</title>
 <style>body{font:16px system-ui;max-width:640px;margin:40px auto;padding:0 16px}input,textarea,button{font:inherit;width:100%;margin:6px 0 14px;padding:8px;box-sizing:border-box}textarea{height:140px}</style>
 <h1>Lock the GitHub token</h1>
-<p>Open this file on your own computer. Nothing is sent anywhere; it runs in your browser. The encrypted token is saved only in this browser, not in the GitHub repo.</p>
+<p>Open this file on your own computer. Nothing is sent anywhere; it runs in your browser.</p>
 <label>GitHub token <input id="t" type="password" placeholder="github_pat_..."></label>
 <label>Password your mom will type on the site <input id="p" type="password"></label>
 <button id="go">Lock it</button>
-<p>This browser will save the locked token locally so it is not committed to GitHub.</p>
+<p>Paste the result into <code>config.js</code> as the value of <code>lockedToken</code>:</p>
 <textarea id="out" readonly></textarea>
 <script>
-const STORAGE_KEY = "site_admin_locked_token";
 const b64 = u8 => btoa(String.fromCharCode(...u8));
 document.getElementById("go").onclick = async () => {
   const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
   const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(p.value), "PBKDF2", false, ["deriveKey"]);
   const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 250000, hash: "SHA-256" }, km, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
   const data = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(t.value)));
-  const lockedToken = { salt: b64(salt), iv: b64(iv), data: b64(data) };
-  out.value = JSON.stringify(lockedToken);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(lockedToken));
+  out.value = JSON.stringify({ salt: b64(salt), iv: b64(iv), data: b64(data) });
 };
 </script>
