@@ -6,9 +6,9 @@ const products = [
     "name": "Happy Diwali",
     "price": 5,
     "inStock": true,
-    "image": "images/happy-diwali-card.svg",
+    "image": "images/happy-diwali-card.jpg",
     "images": [
-      "images/happy-diwali-card.svg"
+      "images/happy-diwali-card.jpg"
     ]
   }
 ];
