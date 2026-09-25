@@ -2,10 +2,24 @@
 // GitHub Pages then republishes the site. The access token is stored encrypted (AES-GCM,
 // key derived from the password) and is only decrypted in memory after the password is entered.
 (function () {
+  const STORAGE_KEY = "site_admin_locked_token";
   const cfg = ADMIN_CONFIG;
   const modal = document.getElementById("adminModal");
   const body = document.getElementById("adminBody");
   let token = null;
+
+  const savedLockedToken = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed && parsed.salt && parsed.iv && parsed.data ? parsed : null;
+    } catch {
+      return null;
+    }
+  };
+
+  cfg.lockedToken = cfg.lockedToken || savedLockedToken();
 
   const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -84,8 +98,12 @@
   };
 
   function showLogin() {
-    if (!cfg.owner || !cfg.repo || !cfg.lockedToken) {
+    if (!cfg.owner || !cfg.repo) {
       body.innerHTML = `<h2>Manage items</h2><p class="a-note">Admin isn't set up yet. Follow <code>setup/README.md</code> to connect the site to GitHub.</p>`;
+      return open();
+    }
+    if (!cfg.lockedToken) {
+      body.innerHTML = `<h2>Manage items</h2><p class="a-note">No admin token is stored on this device yet. Open <code>setup/lock-token.html</code> once to save an encrypted token in this browser, then return here.</p>`;
       return open();
     }
     body.innerHTML = `
@@ -102,6 +120,7 @@
       setStatus("Checking…");
       try { token = await decryptToken(document.getElementById("aPass").value, cfg.lockedToken); }
       catch { return setStatus("Wrong password.", true); }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg.lockedToken));
       showPanel();
     });
   }
